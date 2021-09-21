@@ -80,6 +80,8 @@ def predict_hpa_images(
     os.makedirs(work_dir, exist_ok=True)
     model_path = model_path or os.path.join(work_dir, 'densenet_model_probability.onnx')
     if not os.path.exists(model_path):
+        # Download the modified densenet model which produces class probabilites insead of logits
+        # instead of `return x, feature` in the densenet model forward pass, I did `return 1/(1 + torch.exp(-x)), feature`
         urllib.request.urlretrieve('https://github.com/CellProfiling/densenet/releases/download/v0.1.0/external_crop512_focal_slov_hardlog_class_densenet121_dropout_i768_aug2_5folds_fold0_final_probability.onnx', model_path)
 
     ort_session = ort.InferenceSession(model_path)
