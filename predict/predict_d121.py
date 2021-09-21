@@ -91,6 +91,30 @@ class Config(object):
     features_dir = out_dir
 
 
+
+def export_onnx(model, file_path='densenet_model.onnx'):
+    """
+    Function for exporting the model into onnx format
+    Make sure you have the latest pytorch version 
+    """
+    import onnxruntime as ort
+    # Switch the model to eval model
+    model.eval()
+    # An example input you would normally provide to your model's forward() method.
+    example = torch.rand(1, 4, 1024, 1024)
+    torch.onnx.export(model, example, file_path,
+                    input_names=['image'],
+                    output_names=['classes', 'features'],
+                    dynamic_axes = {'image': [2, 3]}, # the width and height of the image can be changed
+                    verbose=False, opset_version=11)
+    ort_session = ort.InferenceSession(file_path)
+    exported_results = ort_session.run(None, {'image': example.numpy().astype(np.float32)})
+    with torch.no_grad():
+        original_results = model(example)
+    assert np.allclose(original_results[0].numpy(), exported_results[0])
+    print(f'ONNX File {file_path} exported successfully')
+
+
 def prob_to_result(probs, image_ids, th=0.5):
     probs = probs.copy()
     probs[range(len(probs)), np.argmax(probs, axis=1)] = 1
