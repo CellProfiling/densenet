@@ -1,3 +1,7 @@
 *.tar
 tags
 TAGS
+results
+models
+resized_images
+__pycache__

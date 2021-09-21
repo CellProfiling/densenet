@@ -12,6 +12,7 @@ from torch.nn import DataParallel
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SequentialSampler
 from tqdm import tqdm
+import argparse
 
 from dataset import *
 from models import *
@@ -85,9 +86,9 @@ class Config(object):
     suffix = "jpg"
 
     image_dir = "../resized_images/images_1536"
-    result_name = "resultname"
+    result_name = "example"
     out_dir = "../results/"
-    features_dir = "../features/"
+    features_dir = out_dir
 
 
 def prob_to_result(probs, image_ids, th=0.5):
@@ -153,22 +154,33 @@ def predict_augment(model, dataloader, augment, seed, opt):
     print("result csv shape: %s" % str(result_df.shape))
     print(result_df.head())
     result_df.to_csv(result_csv_fname, index=False, compression="gzip")
+    return probs, features
 
 
 def do_predict(model, dataloader, opt):
     model = model.eval()
+    results = []
     for seed in opt.seeds:
         for augment in opt.augments:
-            predict_augment(model, dataloader, augment, seed, opt)
-
+            ret = predict_augment(model, dataloader, augment, seed, opt)
+            results.append(ret)
+    return results
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='predict densenet 121')
+    parser.add_argument('--gpus', type=str, default='', help='GPU device numbers, e.g. 0,1')
+    parser.add_argument('--image_dir', type=str, default='../resized_images/images_1536', help='input image folder')
+    parser.add_argument('--out_dir', type=str, default='../results/', help='output image folder')
+
+    args = parser.parse_args()
     print("%s: calling main function ... " % os.path.basename(__file__))
 
     ID = "Id"
     PREDICTED = "Predicted"
 
     opt = Config()
+    opt.image_dir = args.image_dir
+    opt.gpus = args.gpus
 
     os.environ["CUDA_VISIBLE_DEVICES"] = opt.gpus
     cudnn.benchmark = True

@@ -1,9 +1,10 @@
+pillow==8.3.2
 tqdm==4.15.0
-numpy==1.14.6
-pandas==0.23.1
-torch==0.4.1
+numpy==1.21.2
+pandas>=0.23.1
+torch==1.4.0
 torchvision==0.2.1
-opencv-python==3.4.3.18
+opencv-python==4.5.3.56
 mlcrate==0.1.0
-scikit-image==0.13.0
-scikit-learn==0.19.0
+scikit-image==0.18.3
+scikit-learn>=0.19.0

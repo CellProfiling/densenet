@@ -34,8 +34,7 @@ the script has finished, there will be a folder `images_${size}` in the
 
 ### Model configuration
 
-Also in the predict folder, there are two scripts `predict_d121.py` and
-`predict_d121_tta.py` (pre-setup for test-time augmentation) which will run the
+Also in the predict folder, there is a script named `predict_d121.py` which will run the
 winning densenet model on the images.  These scripts contain a python class
 called `Config` which will need to be edited to work for your setup.
 
@@ -91,8 +90,7 @@ features_dir: A file path, as a string, to a folder in which feature outputs wil
 
 ### Running the model
 
-To run the model, run the command `python predict_d121.py` (or with
-test time augmentations `python predict_d121_tta.py`)
+To run the model, run the command `python predict_d121.py`.
 
 The result files will end up in the folders specified in the `Config`
 class during the previous step.
@@ -110,13 +108,20 @@ To run the example, run the following commands from the project root folder:
 
 ```bash
 mkdir models
-curl <model_link> -o models/model.pth
+curl https://sandbox.zenodo.org/record/920709/files/final.pth -o models/model.pth
 cd predict
 # pip install is only needed if you haven't installed the required packages previously
 pip install -r requirements.txt
-python resize_image --src_dir ../exampleimages ../resized_images/ --size 1536
-python predict_d121.py
+python resize_image.py --src_dir ../exampleimages --dst_dir ../resized_images/ --size 1536
+python predict_d121.py --gpus "0" --image_dir ../resized_images/images_1536 --out_dir ../results/
 ```
 
 The results will end up in the folders `../features` and `../results`
 for result features and predictions respectively.
+
+If you use the default example images, you should see the following results:
+```
+         Id Predicted
+0  800_A6_1        25
+1   89_B5_1         6
+```
