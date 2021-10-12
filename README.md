@@ -5,8 +5,10 @@ challenge to generate feature files and prediction files.
 
 ## Before using this module
 
-1. The repository does not include the model files themselves, which can
-   instead be downloaded from here.
+1. The repository does not include the model files themselves, which
+   can instead be downloaded from
+   [here](https://github.com/CellProfiling/densenet/releases/tag/v0.1.0
+   "link to neural network model").
 
 2. The repository does not include any images to predict on. They can for
    example be downloaded from the [Human_Protein Atlas](https://www.proteinatlas.org).
@@ -111,7 +113,7 @@ To run the example, run the following commands from the project root folder:
 
 ```bash
 mkdir models
-curl https://sandbox.zenodo.org/record/920709/files/final.pth -o models/model.pth
+curl -L https://github.com/CellProfiling/densenet/releases/download/v0.1.0/external_crop512_focal_slov_hardlog_class_densenet121_dropout_i768_aug2_5folds_fold0_final.pth -o models/model.pth
 cd predict
 # pip install is only needed if you haven't installed the required packages previously
 pip install -r requirements.txt
