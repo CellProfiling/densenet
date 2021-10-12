@@ -52,7 +52,6 @@ running of model predictions.
 The following fields are in the class, and should be changed according
 to your system and preferences:
 
-gpus: A string of IDs to available Nvidia GPUs, separated by commas.
 num_workers: The number of threads that runs prediction, as an integer.
              Note that the number of available GPUs may impact how
              many threads you can safely run.
@@ -79,18 +78,22 @@ augments: A list of strings describing with test time augmentations to use.
 model_name: The name of the model to be used for predictions, as a string.
 model_path: A file path, as a string, to the pytorch model file.
 suffix: A string with the file ending of all input images, for example "jpg".
-image_dir: The input image directory, as a string, from which images will be taken to feed the model.
-           Note that if you have used the `resize_image.py` script, this would be the folder
-           with the suffix `_1536` in the `out_dir`.
 result_name: A string containing a name to be used as part of the output file names.
 out_dir: A file path, as a string, to a folder in which prediction results will be stored.
 features_dir: A file path, as a string, to a folder in which feature outputs will be stored.
+# The following two fields are ignored in favor of command line parameters instead.
+image_dir: This field is ignored and instead the corresponding command line argument is used.
+gpus: This field is ignored and instead the command line parameter is used.
 """
 ```
 
 ### Running the model
 
-To run the model, run the command `python predict_d121.py`.
+To run the model, run the command `python predict_d121.py --gpus 0,1 --image_dir /path/to/your/resized/images_1536/`.
+
+The argument to `--gpus` can be anything that is valid for the `CUDA_VISIBLE_DEVICES` environment variable.
+
+The argument to `--image_dir` should be the path to your resized images, as resized by the resize script above.
 
 The result files will end up in the folders specified in the `Config`
 class during the previous step.
