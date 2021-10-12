@@ -2,7 +2,7 @@ pillow==8.3.2
 tqdm==4.15.0
 numpy==1.21.2
 pandas>=0.23.1
-torch==1.4.0
+torch==1.9.1
 torchvision==0.2.1
 opencv-python==4.5.3.56
 mlcrate==0.1.0
